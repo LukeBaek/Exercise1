@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MyFamilyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbAddress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AddressLine1" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tbFamily">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MemberId" Type="uniqueidentifier" />
+          <Property Name="GroupId" Type="uniqueidentifier" />
+          <Property Name="MainAddressId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="tbGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Level" Type="nvarchar" MaxLength="255" />
+          <Property Name="DESCRIPTION" Type="nvarchar" MaxLength="2056" />
+        </EntityType>
+        <EntityType Name="tbMember">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AddressId" Type="uniqueidentifier" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="255" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateOfBirth" Type="datetime" />
+          <Property Name="Gender" Type="char" MaxLength="1" />
+          <Property Name="Mother" Type="nvarchar" MaxLength="255" />
+          <Property Name="Father" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK__tbFamily__GroupI__59FA5E80">
+          <End Role="tbGroup" Type="Self.tbGroup" Multiplicity="0..1" />
+          <End Role="tbFamily" Type="Self.tbFamily" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbFamily">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tbFamily__Member__59063A47">
+          <End Role="tbMember" Type="Self.tbMember" Multiplicity="0..1" />
+          <End Role="tbFamily" Type="Self.tbFamily" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbFamily">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tbMember__Addres__5441852A">
+          <End Role="tbAddress" Type="Self.tbAddress" Multiplicity="0..1" />
+          <End Role="tbMember" Type="Self.tbMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbAddress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbMember">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MyFamilyModelStoreContainer">
+          <EntitySet Name="tbAddress" EntityType="Self.tbAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbFamily" EntityType="Self.tbFamily" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbGroup" EntityType="Self.tbGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbMember" EntityType="Self.tbMember" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__tbFamily__GroupI__59FA5E80" Association="Self.FK__tbFamily__GroupI__59FA5E80">
+            <End Role="tbGroup" EntitySet="tbGroup" />
+            <End Role="tbFamily" EntitySet="tbFamily" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tbFamily__Member__59063A47" Association="Self.FK__tbFamily__Member__59063A47">
+            <End Role="tbMember" EntitySet="tbMember" />
+            <End Role="tbFamily" EntitySet="tbFamily" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tbMember__Addres__5441852A" Association="Self.FK__tbMember__Addres__5441852A">
+            <End Role="tbAddress" EntitySet="tbAddress" />
+            <End Role="tbMember" EntitySet="tbMember" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyFamilyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tbAddress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="AddressLine1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbMembers" Relationship="Self.FK__tbMember__Addres__5441852A" FromRole="tbAddress" ToRole="tbMember" />
+        </EntityType>
+        <EntityType Name="tbFamily">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="MemberId" Type="Guid" />
+          <Property Name="GroupId" Type="Guid" />
+          <Property Name="MainAddressId" Type="Guid" />
+          <NavigationProperty Name="tbGroup" Relationship="Self.FK__tbFamily__GroupI__59FA5E80" FromRole="tbFamily" ToRole="tbGroup" />
+          <NavigationProperty Name="tbMember" Relationship="Self.FK__tbFamily__Member__59063A47" FromRole="tbFamily" ToRole="tbMember" />
+        </EntityType>
+        <EntityType Name="tbGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Level" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DESCRIPTION" Type="String" MaxLength="2056" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbFamilies" Relationship="Self.FK__tbFamily__GroupI__59FA5E80" FromRole="tbGroup" ToRole="tbFamily" />
+        </EntityType>
+        <EntityType Name="tbMember">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="AddressId" Type="Guid" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Mother" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Father" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbAddress" Relationship="Self.FK__tbMember__Addres__5441852A" FromRole="tbMember" ToRole="tbAddress" />
+          <NavigationProperty Name="tbFamilies" Relationship="Self.FK__tbFamily__Member__59063A47" FromRole="tbMember" ToRole="tbFamily" />
+        </EntityType>
+        <Association Name="FK__tbMember__Addres__5441852A">
+          <End Role="tbAddress" Type="Self.tbAddress" Multiplicity="0..1" />
+          <End Role="tbMember" Type="Self.tbMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbAddress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbMember">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tbFamily__GroupI__59FA5E80">
+          <End Role="tbGroup" Type="Self.tbGroup" Multiplicity="0..1" />
+          <End Role="tbFamily" Type="Self.tbFamily" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbFamily">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tbFamily__Member__59063A47">
+          <End Role="tbMember" Type="Self.tbMember" Multiplicity="0..1" />
+          <End Role="tbFamily" Type="Self.tbFamily" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbFamily">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MyFamilyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tbAddresses" EntityType="Self.tbAddress" />
+          <EntitySet Name="tbFamilies" EntityType="Self.tbFamily" />
+          <EntitySet Name="tbGroups" EntityType="Self.tbGroup" />
+          <EntitySet Name="tbMembers" EntityType="Self.tbMember" />
+          <AssociationSet Name="FK__tbMember__Addres__5441852A" Association="Self.FK__tbMember__Addres__5441852A">
+            <End Role="tbAddress" EntitySet="tbAddresses" />
+            <End Role="tbMember" EntitySet="tbMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tbFamily__GroupI__59FA5E80" Association="Self.FK__tbFamily__GroupI__59FA5E80">
+            <End Role="tbGroup" EntitySet="tbGroups" />
+            <End Role="tbFamily" EntitySet="tbFamilies" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tbFamily__Member__59063A47" Association="Self.FK__tbFamily__Member__59063A47">
+            <End Role="tbMember" EntitySet="tbMembers" />
+            <End Role="tbFamily" EntitySet="tbFamilies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyFamilyModelStoreContainer" CdmEntityContainer="MyFamilyEntities">
+          <EntitySetMapping Name="tbAddresses">
+            <EntityTypeMapping TypeName="MyFamilyModel.tbAddress">
+              <MappingFragment StoreEntitySet="tbAddress">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbFamilies">
+            <EntityTypeMapping TypeName="MyFamilyModel.tbFamily">
+              <MappingFragment StoreEntitySet="tbFamily">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="MainAddressId" ColumnName="MainAddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbGroups">
+            <EntityTypeMapping TypeName="MyFamilyModel.tbGroup">
+              <MappingFragment StoreEntitySet="tbGroup">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbMembers">
+            <EntityTypeMapping TypeName="MyFamilyModel.tbMember">
+              <MappingFragment StoreEntitySet="tbMember">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Mother" ColumnName="Mother" />
+                <ScalarProperty Name="Father" ColumnName="Father" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
